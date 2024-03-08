@@ -1,6 +1,7 @@
 package com.example.vktest.ui.screens.product_list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -30,13 +31,14 @@ import com.example.vktest.ui.theme.Purple40
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductListScreen(modifier: Modifier, viewModel: ProductListViewModel) {
+fun ProductListScreen(modifier: Modifier, viewModel: ProductListViewModel, onNavigate: () -> Unit) {
     val expanded = remember { mutableStateOf(false) }
     val products = viewModel.products.collectAsLazyPagingItems()
     val categories = viewModel.categories.collectAsState()
     val pickedProducts = viewModel.pickedProducts.collectAsState()
 
-    Scaffold(modifier = modifier,
+    Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = { Text(text = "List of products") },
@@ -76,13 +78,15 @@ fun ProductListScreen(modifier: Modifier, viewModel: ProductListViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFF4F4F4))
-                .padding(paddingValues),
+                .padding(paddingValues)
+                .clickable { onNavigate() },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             items(products.itemCount) { index ->
                 val product = products[index]
-                if (product != null) ProductItemView(product = product)
+                if (product != null)
+                    ProductItemView(product)
             }
         }
     }

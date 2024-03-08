@@ -64,26 +64,20 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    val retrofitVersion = "2.9.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter)
 
-    val okhttpVersion = "4.12.0"
-    implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
-    implementation("com.squareup.okhttp3:logging-interceptor:$okhttpVersion")
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.interceptor)
 
-    val coilVersion = "2.6.0"
-    implementation("io.coil-kt:coil-compose:$coilVersion")
+    implementation(libs.coil)
 
-    val pagingVersion = "3.2.1"
-    implementation("androidx.paging:paging-compose:$pagingVersion")
-    implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
+    implementation(libs.paging)
+    implementation(libs.paging.runtime)
 
-    val navigationVersion = "2.7.7"
-    implementation("androidx.navigation:navigation-compose:$navigationVersion")
+    implementation(libs.navigation)
 
-    val koinVersion = "3.5.0"
-    implementation("io.insert-koin:koin-android:$koinVersion")
-    implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
-    implementation("io.insert-koin:koin-androidx-navigation:$koinVersion")
+    implementation(libs.koin)
+    implementation(libs.koin.compose)
+    implementation(libs.koin.navigation)
 }
