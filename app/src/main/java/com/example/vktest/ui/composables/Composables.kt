@@ -29,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
@@ -276,12 +277,18 @@ fun StarsRating(modifier: Modifier, rating: Double) {
 }
 
 @Composable
-fun SearchBar(searchText: MutableState<String>, onNavigate: () -> Unit) {
+fun SearchBar(modifier: Modifier, searchText: MutableState<String>, onNavigate: () -> Unit) {
     TextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 4.dp),
-        //colors = TextFieldColors(),
+        modifier = modifier,
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            unfocusedTextColor = Color.LightGray,
+            focusedTextColor = Color.Black,
+            focusedTrailingIconColor = Purple40,
+            unfocusedTrailingIconColor = PurpleGrey40
+        ),
+        shape = RoundedCornerShape(8.dp),
         singleLine = true,
         value = searchText.value,
         onValueChange = { searchText.value = it },

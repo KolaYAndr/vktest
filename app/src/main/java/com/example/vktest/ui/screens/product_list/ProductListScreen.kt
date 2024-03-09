@@ -1,5 +1,6 @@
 package com.example.vktest.ui.screens.product_list
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -84,6 +85,11 @@ fun ProductListScreen(
             categories = categories.value,
             expanded = dropdownExpanded
         ) {
+            Log.d(
+                "route", Screen.SearchFilterScreen.withArgs(
+                    "category/$it"
+                )
+            )
             navController.navigate(
                 Screen.SearchFilterScreen.withArgs(
                     "category/$it"
@@ -102,7 +108,17 @@ fun ProductListScreen(
         ) {
             if (showSearch.value) {
                 item {
-                    SearchBar(searchText = searchText) {
+                    SearchBar(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 4.dp),
+                        searchText = searchText
+                    ) {
+                        Log.d(
+                            "route", Screen.SearchFilterScreen.withArgs(
+                                "poisk/${searchText.value}"
+                            )
+                        )
                         navController.navigate(
                             Screen.SearchFilterScreen.withArgs(
                                 "poisk/${searchText.value}"
@@ -120,6 +136,7 @@ fun ProductListScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 4.dp)
                     ) {
+                        Log.d("route", Screen.ProductDetailScreen.withArgs(it.title))
                         navController.navigate(Screen.ProductDetailScreen.withArgs(it.title))
                     }
             }
