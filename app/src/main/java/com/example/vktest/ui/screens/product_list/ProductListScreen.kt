@@ -3,6 +3,7 @@ package com.example.vktest.ui.screens.product_list
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -95,7 +96,12 @@ fun ProductListScreen(
             items(products.itemCount) { index ->
                 val product = products[index]
                 if (product != null)
-                    ProductItemView(product) {
+                    ProductItemView(
+                        product = product,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 4.dp)
+                    ) {
                         viewModel.selectProduct(it)
                         onNavigate()
                     }

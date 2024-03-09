@@ -80,15 +80,13 @@ fun DropdownCategoriesMenu(
     }
 }
 
-//TODO во все композаблы добавить модифаер, вывод по категории и по поиску
+//TODO вывод по категории и по поиску
 
 
 @Composable
-fun ProductItemView(product: Product, onNavigate: (Product) -> Unit) {
+fun ProductItemView(product: Product, modifier: Modifier, onNavigate: (Product) -> Unit) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 4.dp)
+        modifier = modifier
             .clickable { onNavigate(product) },
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -145,12 +143,12 @@ fun ProductItemView(product: Product, onNavigate: (Product) -> Unit) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ProductPager(product: Product) {
+fun ProductPager(modifier: Modifier, images: List<String>) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val state = rememberPagerState(pageCount = { product.images.size })
+        val state = rememberPagerState(pageCount = { images.size })
         HorizontalPager(
             state = state,
             modifier = Modifier
@@ -158,7 +156,7 @@ fun ProductPager(product: Product) {
                 .padding(top = 4.dp)
                 .clip(RoundedCornerShape(24.dp))
         ) { page ->
-            val model = product.images[page]
+            val model = images[page]
             AsyncImage(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -190,11 +188,9 @@ fun ProductPager(product: Product) {
 }
 
 @Composable
-fun ProductInfo(product: Product) {
+fun ProductInfo(modifier: Modifier, product: Product) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 16.dp),
+        modifier = modifier,
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
@@ -256,7 +252,7 @@ fun ProductInfo(product: Product) {
 }
 
 @Composable
-fun StarsRating(rating: Double, modifier: Modifier) {
+fun StarsRating(modifier: Modifier, rating: Double) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
