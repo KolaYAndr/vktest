@@ -2,7 +2,9 @@ package com.example.vktest.di
 
 import com.example.vktest.data.remote.DummyApi
 import com.example.vktest.data.remote.repository.ProductRepository
-import com.example.vktest.ui.screens.shared.ProductViewModel
+import com.example.vktest.ui.screens.product_detail.ProductDetailViewModel
+import com.example.vktest.ui.screens.search_filter.SearchFilterViewModel
+import com.example.vktest.ui.screens.product_list.ProductListViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -30,7 +32,15 @@ val appModule = module {
 
     single<ProductRepository> { ProductRepository(get<DummyApi>()) }
 
-    viewModel<ProductViewModel> {
-        ProductViewModel(get<ProductRepository>())
+    viewModel<ProductListViewModel> {
+        ProductListViewModel(get<ProductRepository>())
+    }
+
+    viewModel<ProductDetailViewModel> {
+        ProductDetailViewModel(get<ProductRepository>())
+    }
+
+    viewModel<SearchFilterViewModel> {
+        SearchFilterViewModel(get<ProductRepository>())
     }
 }

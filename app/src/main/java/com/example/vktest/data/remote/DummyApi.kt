@@ -14,7 +14,7 @@ interface DummyApi {
     suspend fun getProducts(@Query("limit") limit: Int, @Query("skip") skip: Int): ProductResponse
 
     @GET("/products")
-    suspend fun getProductsWithQuery(@Query("q") q: String): ProductResponse
+    suspend fun getProductsByQuery(@Query("q") q: String): ProductResponse
 
     @GET("/products/category/{category}")
     suspend fun getProductsInCategory(@Path("category") category: String): ProductResponse

@@ -11,15 +11,18 @@ import kotlinx.coroutines.flow.Flow
 const val NETWORK_PAGE_SIZE = 20
 
 class ProductRepository(private val api: DummyApi) {
-    fun getAllProducts(): Flow<PagingData<Product>> {
+    fun getProducts(): Flow<PagingData<Product>> {
         return Pager(
             config = PagingConfig(NETWORK_PAGE_SIZE, enablePlaceholders = false),
             pagingSourceFactory = { ProductPagingSource(api) }
         ).flow
     }
 
+    suspend fun getAllProducts() = api.getProducts(limit = 0, skip = 0)
+
     suspend fun getCategories() = api.getCategories()
 
-
     suspend fun getProductInCategory(category: String) = api.getProductsInCategory(category).products
+
+    suspend fun getProductByQuery(q: String) = api.getProductsByQuery(q).products
 }

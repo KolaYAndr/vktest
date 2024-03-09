@@ -80,11 +80,8 @@ fun DropdownCategoriesMenu(
     }
 }
 
-//TODO вывод по категории и по поиску
-
-
 @Composable
-fun ProductItemView(product: Product, modifier: Modifier, onNavigate: (Product) -> Unit) {
+fun ProductItemView(modifier: Modifier, product: Product, onNavigate: (Product) -> Unit) {
     Card(
         modifier = modifier
             .clickable { onNavigate(product) },
@@ -104,7 +101,6 @@ fun ProductItemView(product: Product, modifier: Modifier, onNavigate: (Product) 
                     .border(1.dp, Color.DarkGray, CircleShape),
                 contentScale = ContentScale.Crop
             )
-
             Column(
                 modifier = Modifier
                     .padding(horizontal = 8.dp)

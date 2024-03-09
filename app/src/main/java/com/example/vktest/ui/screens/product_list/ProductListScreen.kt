@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -24,24 +26,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.vktest.R
 import com.example.vktest.ui.composables.DropdownCategoriesMenu
 import com.example.vktest.ui.composables.ProductItemView
-import com.example.vktest.ui.screens.shared.ProductViewModel
+import com.example.vktest.ui.navigation.Screen
 import com.example.vktest.ui.theme.Purple40
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductListScreen(
     modifier: Modifier,
-    viewModel: ProductViewModel,
-    onNavigate: () -> Unit
+    viewModel: ProductListViewModel,
+    navController: NavController
 ) {
-    val expanded = remember { mutableStateOf(false) }
     val products = viewModel.products.collectAsLazyPagingItems()
+    val dropdownExpanded = remember { mutableStateOf(false) }
     val categories = viewModel.categories.collectAsState()
-    val pickedProducts = viewModel.pickedProducts.collectAsState()
+    val searchbarShow = remember { mutableStateOf(false) }
+    val searchText = remember { mutableStateOf("") }
 
     Scaffold(
         modifier = modifier,
@@ -50,7 +54,7 @@ fun ProductListScreen(
                 title = { Text(text = "List of products") },
                 actions = {
                     IconButton(onClick = {
-
+                        searchbarShow.value = true
                     }) {
                         Icon(
                             imageVector = Icons.Filled.Search,
@@ -59,7 +63,7 @@ fun ProductListScreen(
                     }
                     IconButton(onClick = {
                         viewModel.getCategories()
-                        expanded.value = true
+                        dropdownExpanded.value = true
                     }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_filter),
@@ -75,23 +79,41 @@ fun ProductListScreen(
             )
         }
     ) { paddingValues ->
+        SearchBar(
+            query = searchText.value,
+            onQueryChange = { searchText.value = it },
+            onSearch = { navController.navigate(Screen.SearchFilterScreen.withArgs(searchText.value)) },
+            active = searchbarShow.value,
+            onActiveChange = {  },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues)
+        ) {
+
+        }
         DropdownCategoriesMenu(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White),
+                .background(Color.White)
+                .padding(paddingValues),
             categories = categories.value,
-            expanded = expanded
-        ) { pickedCategory ->
-            viewModel.getProductsInCategory(pickedCategory)
-            //TODO отображение списка выбранных продуктов
+            expanded = dropdownExpanded
+        ) {
+            navController.navigate(
+                Screen.SearchFilterScreen.withArgs(
+                    "category"
+                )
+            )
         }
+        val lazyState = rememberLazyListState()
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFF4F4F4))
                 .padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            state = lazyState
         ) {
             items(products.itemCount) { index ->
                 val product = products[index]
@@ -102,8 +124,7 @@ fun ProductListScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 4.dp)
                     ) {
-                        viewModel.selectProduct(it)
-                        onNavigate()
+                        navController.navigate(Screen.ProductDetailScreen.withArgs(it.title))
                     }
             }
         }
