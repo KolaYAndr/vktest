@@ -13,7 +13,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -31,6 +30,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.vktest.R
 import com.example.vktest.ui.composables.DropdownCategoriesMenu
 import com.example.vktest.ui.composables.ProductItemView
+import com.example.vktest.ui.composables.SearchBar
 import com.example.vktest.ui.navigation.Screen
 import com.example.vktest.ui.theme.Purple40
 
@@ -44,8 +44,8 @@ fun ProductListScreen(
     val products = viewModel.products.collectAsLazyPagingItems()
     val dropdownExpanded = remember { mutableStateOf(false) }
     val categories = viewModel.categories.collectAsState()
-    val searchbarShow = remember { mutableStateOf(false) }
-    val searchText = remember { mutableStateOf("") }
+    val showSearch = remember { mutableStateOf(false) }
+    val searchText = remember { mutableStateOf(" ") }
 
     Scaffold(
         modifier = modifier,
@@ -53,9 +53,7 @@ fun ProductListScreen(
             TopAppBar(
                 title = { Text(text = "List of products") },
                 actions = {
-                    IconButton(onClick = {
-                        searchbarShow.value = true
-                    }) {
+                    IconButton(onClick = { showSearch.value = !showSearch.value }) {
                         Icon(
                             imageVector = Icons.Filled.Search,
                             contentDescription = "Search button"
@@ -79,29 +77,16 @@ fun ProductListScreen(
             )
         }
     ) { paddingValues ->
-        SearchBar(
-            query = searchText.value,
-            onQueryChange = { searchText.value = it },
-            onSearch = { navController.navigate(Screen.SearchFilterScreen.withArgs(searchText.value)) },
-            active = searchbarShow.value,
-            onActiveChange = {  },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(paddingValues)
-        ) {
-
-        }
         DropdownCategoriesMenu(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .padding(paddingValues),
+                .fillMaxWidth()
+                .background(Color.White),
             categories = categories.value,
             expanded = dropdownExpanded
         ) {
             navController.navigate(
                 Screen.SearchFilterScreen.withArgs(
-                    "category"
+                    "category/$it"
                 )
             )
         }
@@ -115,6 +100,17 @@ fun ProductListScreen(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             state = lazyState
         ) {
+            if (showSearch.value) {
+                item {
+                    SearchBar(searchText = searchText) {
+                        navController.navigate(
+                            Screen.SearchFilterScreen.withArgs(
+                                "poisk/${searchText.value}"
+                            )
+                        )
+                    }
+                }
+            }
             items(products.itemCount) { index ->
                 val product = products[index]
                 if (product != null)

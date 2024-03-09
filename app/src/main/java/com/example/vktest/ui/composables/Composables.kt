@@ -19,13 +19,16 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
@@ -270,4 +273,28 @@ fun StarsRating(modifier: Modifier, rating: Double) {
         }
         Text(text = rating.toString(), color = Purple40, fontSize = 14.sp)
     }
+}
+
+@Composable
+fun SearchBar(searchText: MutableState<String>, onNavigate: () -> Unit) {
+    TextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp),
+        //colors = TextFieldColors(),
+        singleLine = true,
+        value = searchText.value,
+        onValueChange = { searchText.value = it },
+        trailingIcon = {
+            if (searchText.value.isNotBlank())
+                IconButton(onClick = {
+                    onNavigate()
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "Search button"
+                    )
+                }
+        },
+    )
 }

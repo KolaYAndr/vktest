@@ -12,9 +12,16 @@ class SearchFilterViewModel(private val repository: ProductRepository) : ViewMod
     val searchResultProducts get() = _searchResultProducts
 
     fun performSearch(intent: String) {
-        when (intent) {
-            "q" -> getProductsByQuery(intent)
-            "category" -> getProductsInCategory(intent)
+        val strs = intent.split("/")
+        when(strs[0])  {
+            "poisk" -> {
+                val q = strs[1]
+                getProductsByQuery(q)
+            }
+            "category" -> {
+                val category = intent.split("/")[1]
+                getProductsInCategory(category)
+            }
         }
     }
 
