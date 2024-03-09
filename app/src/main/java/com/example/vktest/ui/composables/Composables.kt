@@ -3,6 +3,7 @@ package com.example.vktest.ui.composables
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,14 +13,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -28,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -38,20 +44,20 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.vktest.R
 import com.example.vktest.data.remote.response.product.Product
 import com.example.vktest.ui.theme.Purple40
 import com.example.vktest.ui.theme.PurpleGrey40
 
 @Composable
 fun DropdownCategoriesMenu(
+    modifier: Modifier,
     categories: List<String>,
     expanded: MutableState<Boolean>,
     onPickedCategory: (String) -> Unit
 ) {
     DropdownMenu(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
+        modifier = modifier,
         onDismissRequest = {
             expanded.value = false
         },
@@ -74,13 +80,16 @@ fun DropdownCategoriesMenu(
     }
 }
 
+//TODO во все композаблы добавить модифаер, вывод по категории и по поиску
+
 
 @Composable
-fun ProductItemView(product: Product) {
+fun ProductItemView(product: Product, onNavigate: (Product) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp),
+            .padding(horizontal = 4.dp)
+            .clickable { onNavigate(product) },
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
@@ -147,7 +156,7 @@ fun ProductPager(product: Product) {
             modifier = Modifier
                 .size(300.dp)
                 .padding(top = 4.dp)
-                .clip(RoundedCornerShape(8.dp))
+                .clip(RoundedCornerShape(24.dp))
         ) { page ->
             val model = product.images[page]
             AsyncImage(
@@ -200,7 +209,7 @@ fun ProductInfo(product: Product) {
                         style = SpanStyle(
                             color = Color.White
                         )
-                    ){
+                    ) {
                         append(product.price.toString())
                         append("$ ")
                     }
@@ -211,7 +220,10 @@ fun ProductInfo(product: Product) {
                             fontSize = 12.sp
                         )
                     ) {
-                        val noDiscountPrice = String.format("%.1f" ,product.price / ((100 - product.discountPercentage) / 100))
+                        val noDiscountPrice = String.format(
+                            "%.1f",
+                            product.price / ((100 - product.discountPercentage) / 100)
+                        )
                         append(noDiscountPrice)
                         append("$")
                     }
@@ -222,17 +234,14 @@ fun ProductInfo(product: Product) {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            Text(
-                text = product.category,
-                modifier = Modifier
-                    .border(2.dp, Purple40, RoundedCornerShape(8.dp))
-                    .padding(4.dp),
-                fontSize = 18.sp,
-                color = Color.Black
-            )
+            StarsRating(rating = product.rating, modifier = Modifier.wrapContentSize())
         }
         Text(
-            text = product.title,
+            text = buildString {
+                append(product.brand)
+                append(" ")
+                append(product.title)
+            },
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
             color = Color.Black
@@ -243,5 +252,30 @@ fun ProductInfo(product: Product) {
             lineHeight = TextUnit(18f, TextUnitType.Sp),
             color = Color.Gray
         )
+    }
+}
+
+@Composable
+fun StarsRating(rating: Double, modifier: Modifier) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        for (i in 1..5) {
+            if (rating >= i) {
+                Icon(
+                    imageVector = Icons.Rounded.Star,
+                    contentDescription = "Rating of product",
+                    tint = Purple40
+                )
+            } else
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_rounded_halfstar),
+                    contentDescription = "Rating of product",
+                    tint = Purple40
+                )
+        }
+        Text(text = rating.toString(), color = Purple40, fontSize = 14.sp)
     }
 }

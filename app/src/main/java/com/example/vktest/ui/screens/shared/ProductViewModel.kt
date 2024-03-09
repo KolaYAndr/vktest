@@ -1,4 +1,4 @@
-package com.example.vktest.ui.screens.product_list
+package com.example.vktest.ui.screens.shared
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,15 +11,26 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 
-class ProductListViewModel(private val repository: ProductRepository) : ViewModel() {
+class ProductViewModel(private val repository: ProductRepository) : ViewModel() {
     private val _products = repository.getAllProducts().cachedIn(viewModelScope)
     val products: Flow<PagingData<Product>> get() = _products
 
     private val _categories: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
     val categories get() = _categories
 
-    private val _pickedProducts: MutableStateFlow<List<Product>> = MutableStateFlow(emptyList())
-    val pickedProducts get() = _pickedProducts
+    private val _pickedFromCategoriesOrSearch: MutableStateFlow<List<Product>> =
+        MutableStateFlow(emptyList())
+    val pickedProducts get() = _pickedFromCategoriesOrSearch
+
+    private val _selectedProduct =
+        MutableStateFlow(
+            Product("", "", "", 0.0, 0, listOf(""), 0, .0, 0, "", "")
+        )
+    val selectedProduct get() = _selectedProduct
+
+    fun selectProduct(product: Product) {
+        _selectedProduct.value = product
+    }
 
     fun getCategories() {
         viewModelScope.launch {
@@ -29,7 +40,7 @@ class ProductListViewModel(private val repository: ProductRepository) : ViewMode
 
     fun getProductsInCategory(category: String) {
         viewModelScope.launch {
-            _pickedProducts.value = repository.getProductInCategory(category)
+            _pickedFromCategoriesOrSearch.value = repository.getProductInCategory(category)
         }
     }
 }
