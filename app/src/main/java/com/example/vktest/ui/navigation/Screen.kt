@@ -18,4 +18,4 @@ sealed class Screen(val route: String) {
 
 private const val PRODUCT_LIST_SCREEN = "product_list_screen"
 private const val PRODUCT_DETAIL_SCREEN = "product_detail_screen"
-private const val SEARCH_FILTER_SCREEN = "search_filter_screen"
+private const val SEARCH_FILTER_SCREEN = "search_screen"

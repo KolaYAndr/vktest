@@ -86,9 +86,9 @@ fun ProductListScreen(
             expanded = dropdownExpanded
         ) {
             navController.navigate(
-                Screen.SearchFilterScreen.route/*.withArgs(
+                Screen.SearchFilterScreen.withArgs(
                     "category", it
-                )*/
+                )
             )
         }
         LazyColumn(
@@ -108,9 +108,7 @@ fun ProductListScreen(
                         searchText = searchText
                     ) {
                         navController.navigate(
-                            Screen.SearchFilterScreen.withArgs(
-                                "poisk", searchText.value
-                            )
+                            Screen.SearchFilterScreen.withArgs("poisk", searchText.value)
                         )
                     }
                 }

@@ -1,5 +1,6 @@
 package com.example.vktest.ui.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -32,6 +33,8 @@ fun Navigation() {
             arguments = listOf(navArgument(PRODUCT_TITLE) { type = NavType.StringType })
         ) {
             val productTitle = it.arguments?.getString(PRODUCT_TITLE) ?: ""
+            Log.d("route", Screen.ProductDetailScreen.route + "/{productTitle}")
+            Log.d("route", productTitle)
             ProductDetailScreen(
                 modifier = Modifier.fillMaxSize(),
                 productTitle = productTitle,
@@ -41,18 +44,22 @@ fun Navigation() {
             }
         }
         composable(
-            route = Screen.SearchFilterScreen.route/*+ "/{way}/{request}",
+            route = Screen.SearchFilterScreen.route + "/{way}/{request}",
             arguments = listOf(
-                navArgument(SEARCH_FILTER_WAY) { type = NavType.StringType },
-                navArgument(SEARCH_FILTER_REQUEST) { type = NavType.StringType })*/
-        ) {
-            val way = it.arguments?.getString(SEARCH_FILTER_WAY)
-            val request = it.arguments?.getString(SEARCH_FILTER_REQUEST)
+                navArgument("way") {
+                    type = NavType.StringType
+                },
+                navArgument("request") {
+                    type = NavType.StringType
+                }
+            )) {
+            val way = it.arguments?.getString("way") ?: ""
+            val request = it.arguments?.getString("request") ?: ""
             SearchFilterScreen(
                 modifier = Modifier.fillMaxSize(),
                 viewModel = getViewModel<SearchFilterViewModel>(),
                 navController = navController,
-                intent = "category/furniture"
+                intent = way
             )
         }
     }
