@@ -13,7 +13,7 @@ interface DummyApi {
     @GET("/products")
     suspend fun getProducts(@Query("limit") limit: Int, @Query("skip") skip: Int): ProductResponse
 
-    @GET("/products")
+    @GET("/products/search")
     suspend fun getProductsByQuery(@Query("q") q: String): ProductResponse
 
     @GET("/products/category/{category}")

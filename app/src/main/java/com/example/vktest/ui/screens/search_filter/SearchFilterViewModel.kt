@@ -19,7 +19,7 @@ class SearchFilterViewModel(private val repository: ProductRepository) : ViewMod
                 getProductsByQuery(q)
             }
             "category" -> {
-                val category = intent.split("/")[1]
+                val category = strs[1]
                 getProductsInCategory(category)
             }
         }

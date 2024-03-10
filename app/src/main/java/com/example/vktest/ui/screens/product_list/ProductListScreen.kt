@@ -46,7 +46,7 @@ fun ProductListScreen(
     val dropdownExpanded = remember { mutableStateOf(false) }
     val categories = viewModel.categories.collectAsState()
     val showSearch = remember { mutableStateOf(false) }
-    val searchText = remember { mutableStateOf(" ") }
+    val searchText = remember { mutableStateOf("") }
 
     Scaffold(
         modifier = modifier,
@@ -85,26 +85,19 @@ fun ProductListScreen(
             categories = categories.value,
             expanded = dropdownExpanded
         ) {
-            Log.d(
-                "route", Screen.SearchFilterScreen.withArgs(
-                    "category/$it"
-                )
-            )
             navController.navigate(
-                Screen.SearchFilterScreen.withArgs(
-                    "category/$it"
-                )
+                Screen.SearchFilterScreen.route/*.withArgs(
+                    "category", it
+                )*/
             )
         }
-        val lazyState = rememberLazyListState()
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFF4F4F4))
                 .padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            state = lazyState
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             if (showSearch.value) {
                 item {
@@ -114,14 +107,9 @@ fun ProductListScreen(
                             .padding(horizontal = 4.dp),
                         searchText = searchText
                     ) {
-                        Log.d(
-                            "route", Screen.SearchFilterScreen.withArgs(
-                                "poisk/${searchText.value}"
-                            )
-                        )
                         navController.navigate(
                             Screen.SearchFilterScreen.withArgs(
-                                "poisk/${searchText.value}"
+                                "poisk", searchText.value
                             )
                         )
                     }
@@ -136,7 +124,6 @@ fun ProductListScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 4.dp)
                     ) {
-                        Log.d("route", Screen.ProductDetailScreen.withArgs(it.title))
                         navController.navigate(Screen.ProductDetailScreen.withArgs(it.title))
                     }
             }

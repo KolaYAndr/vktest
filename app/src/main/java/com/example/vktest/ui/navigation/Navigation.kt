@@ -41,19 +41,23 @@ fun Navigation() {
             }
         }
         composable(
-            route = Screen.SearchFilterScreen.route + "/{intent}",
-            arguments = listOf(navArgument(SEARCH_FILTER_INTENT) { type = NavType.StringType })
+            route = Screen.SearchFilterScreen.route/*+ "/{way}/{request}",
+            arguments = listOf(
+                navArgument(SEARCH_FILTER_WAY) { type = NavType.StringType },
+                navArgument(SEARCH_FILTER_REQUEST) { type = NavType.StringType })*/
         ) {
-            val intent = it.arguments?.getString(SEARCH_FILTER_INTENT) ?: ""
+            val way = it.arguments?.getString(SEARCH_FILTER_WAY)
+            val request = it.arguments?.getString(SEARCH_FILTER_REQUEST)
             SearchFilterScreen(
                 modifier = Modifier.fillMaxSize(),
                 viewModel = getViewModel<SearchFilterViewModel>(),
                 navController = navController,
-                intent = intent
+                intent = "category/furniture"
             )
         }
     }
 }
 
 private const val PRODUCT_TITLE = "productTitle"
-private const val SEARCH_FILTER_INTENT = "searchFilterIntent"
+private const val SEARCH_FILTER_WAY = "searchFilterWay"
+private const val SEARCH_FILTER_REQUEST = "searchFilterRequest"

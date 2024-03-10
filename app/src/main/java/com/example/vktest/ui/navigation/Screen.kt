@@ -1,9 +1,9 @@
 package com.example.vktest.ui.navigation
 
 sealed class Screen(val route: String) {
-    object ProductListScreen : Screen(PRODUCT_LIST_SCREEN)
-    object ProductDetailScreen : Screen(PRODUCT_DETAIL_SCREEN)
-    object SearchFilterScreen : Screen(SEARCH_FILTER_SCREEN)
+    data object ProductListScreen : Screen(PRODUCT_LIST_SCREEN)
+    data object ProductDetailScreen : Screen(PRODUCT_DETAIL_SCREEN)
+    data object SearchFilterScreen : Screen(SEARCH_FILTER_SCREEN)
 
     fun withArgs(vararg args: String): String {
         return buildString {
