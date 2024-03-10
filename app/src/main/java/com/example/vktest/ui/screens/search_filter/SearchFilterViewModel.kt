@@ -11,27 +11,16 @@ class SearchFilterViewModel(private val repository: ProductRepository) : ViewMod
     private val _searchResultProducts = MutableStateFlow<List<Product>>(emptyList())
     val searchResultProducts get() = _searchResultProducts
 
-//    fun performSearch(intent: String) {
-//        val strs = intent.split("/")
-//        when(strs[0])  {
-//            "poisk" -> {
-//                val q = strs[1]
-//                getProductsByQuery(q)
-//            }
-//            "category" -> {
-//                val category = strs[1]
-//                getProductsInCategory(category)
-//            }
-//        }
-//    }
-
-    fun performSearch(way: String) {
-        when(way)  {
+    fun performSearch(intent: String) {
+        val strs = intent.split("/")
+        when(strs[0])  {
             "poisk" -> {
-                getProductsByQuery("Iphone")
+                val q = strs[1]
+                getProductsByQuery(q)
             }
             "category" -> {
-                getProductsInCategory("furniture")
+                val category = strs[1]
+                getProductsInCategory(category)
             }
         }
     }

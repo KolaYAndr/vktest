@@ -59,7 +59,7 @@ fun Navigation() {
                 modifier = Modifier.fillMaxSize(),
                 viewModel = getViewModel<SearchFilterViewModel>(),
                 navController = navController,
-                intent = way
+                intent = "$way/$request"
             )
         }
     }

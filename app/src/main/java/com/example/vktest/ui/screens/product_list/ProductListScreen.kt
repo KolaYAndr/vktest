@@ -126,5 +126,7 @@ fun ProductListScreen(
                     }
             }
         }
+
+        //TODO constants to utils file, define dimens in resources, error handling and we're ready to send
     }
 }
