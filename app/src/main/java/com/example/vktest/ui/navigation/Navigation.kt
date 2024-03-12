@@ -29,7 +29,7 @@ fun Navigation() {
             )
         }
         composable(
-            route = Screen.ProductDetailScreen.route + "/{productTitle}",
+            route = Screen.ProductDetailScreen.route + "/{$PRODUCT_TITLE}",
             arguments = listOf(navArgument(PRODUCT_TITLE) { type = NavType.StringType })
         ) {
             val productTitle = it.arguments?.getString(PRODUCT_TITLE) ?: ""
@@ -44,17 +44,17 @@ fun Navigation() {
             }
         }
         composable(
-            route = Screen.SearchFilterScreen.route + "/{way}/{request}",
+            route = Screen.SearchFilterScreen.route + "/{$SEARCH_FILTER_WAY}/{$SEARCH_FILTER_REQUEST}",
             arguments = listOf(
-                navArgument("way") {
+                navArgument(SEARCH_FILTER_WAY) {
                     type = NavType.StringType
                 },
-                navArgument("request") {
+                navArgument(SEARCH_FILTER_REQUEST) {
                     type = NavType.StringType
                 }
             )) {
-            val way = it.arguments?.getString("way") ?: ""
-            val request = it.arguments?.getString("request") ?: ""
+            val way = it.arguments?.getString(SEARCH_FILTER_WAY) ?: ""
+            val request = it.arguments?.getString(SEARCH_FILTER_REQUEST) ?: ""
             SearchFilterScreen(
                 modifier = Modifier.fillMaxSize(),
                 viewModel = getViewModel<SearchFilterViewModel>(),

@@ -1,15 +1,15 @@
 package com.example.vktest.ui.screens.product_list
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,7 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.vktest.R
 import com.example.vktest.ui.composables.DropdownCategoriesMenu
@@ -78,55 +80,87 @@ fun ProductListScreen(
             )
         }
     ) { paddingValues ->
-        DropdownCategoriesMenu(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White),
-            categories = categories.value,
-            expanded = dropdownExpanded
-        ) {
-            navController.navigate(
-                Screen.SearchFilterScreen.withArgs(
-                    "category", it
-                )
-            )
-        }
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFFF4F4F4))
-                .padding(paddingValues),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            if (showSearch.value) {
-                item {
-                    SearchBar(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 4.dp),
-                        searchText = searchText
-                    ) {
-                        navController.navigate(
-                            Screen.SearchFilterScreen.withArgs("poisk", searchText.value)
+
+        when (products.loadState.refresh) {
+            is LoadState.Error -> {
+                Box(
+                    modifier = modifier
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Sorry an error occurred",
+                        fontSize = 22.sp,
+                        color = Color.DarkGray
+                    )
+                }
+            }
+
+            is LoadState.Loading -> {
+                Box(
+                    modifier = modifier
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            else -> {
+                DropdownCategoriesMenu(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White),
+                    categories = categories.value,
+                    expanded = dropdownExpanded
+                ) {
+                    navController.navigate(
+                        Screen.SearchFilterScreen.withArgs(
+                            "category", it
                         )
+                    )
+                }
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFF4F4F4))
+                        .padding(paddingValues),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    if (showSearch.value) {
+                        item {
+                            SearchBar(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 4.dp),
+                                searchText = searchText
+                            ) {
+                                navController.navigate(
+                                    Screen.SearchFilterScreen.withArgs("poisk", searchText.value)
+                                )
+                            }
+                        }
+                    }
+                    items(products.itemCount) { index ->
+                        val product = products[index]
+                        if (product != null)
+                            ProductItemView(
+                                product = product,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 4.dp)
+                            ) {
+                                navController.navigate(Screen.ProductDetailScreen.withArgs(it.title))
+                            }
+                    }
+                    item {
+                        if(products.loadState.append is LoadState.Loading) {
+                            CircularProgressIndicator()
+                        }
                     }
                 }
             }
-            items(products.itemCount) { index ->
-                val product = products[index]
-                if (product != null)
-                    ProductItemView(
-                        product = product,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 4.dp)
-                    ) {
-                        navController.navigate(Screen.ProductDetailScreen.withArgs(it.title))
-                    }
-            }
         }
-
-        //TODO constants to utils file, define dimens in resources, error handling and we're ready to send
     }
 }

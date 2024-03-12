@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.vktest.data.remote.repository.ProductRepository
 import com.example.vktest.data.remote.response.product.Product
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -19,7 +20,7 @@ class ProductListViewModel(private val repository: ProductRepository) : ViewMode
     val categories get() = _categories
 
     fun getCategories() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _categories.value = repository.getCategories()
         }
     }

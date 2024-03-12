@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vktest.data.remote.repository.ProductRepository
 import com.example.vktest.data.remote.response.product.Product
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -26,13 +27,13 @@ class SearchFilterViewModel(private val repository: ProductRepository) : ViewMod
     }
 
     private fun getProductsInCategory(category: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _searchResultProducts.value = repository.getProductInCategory(category)
         }
     }
 
     private fun getProductsByQuery(q: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _searchResultProducts.value = repository.getProductByQuery(q)
         }
     }
